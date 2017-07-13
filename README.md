@@ -9,3 +9,5 @@ Changes made to the code:
    * -f
    * -w
    * -h
+ * Added a progress meter
+ 
