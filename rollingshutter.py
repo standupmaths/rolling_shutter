@@ -51,6 +51,7 @@ print("Global path:     "+computed["frame_dir"])
 print("Speed:           "+str(options["speed"]))
 print("Frame extension: "+options["frame_file"])
 print("Dimensions:      "+str(options["width"])+"x"+str(options["height"]))
+print("\n")
 
 
 def rs(opts, comps):
@@ -72,11 +73,15 @@ def rs(opts, comps):
 
     current_row = 0
 
-    for filename in glob.glob(frame_dir + "*." + frame_file):
+    files = glob.glob(frame_dir + "*." + frame_file)
+    for y, filename in enumerate(files):
+        percentage = str(y/len(files))
+        print("Progress: "+percentage+"%", end="\r")
         frame = Image.open(filename)
         new_line = frame.crop((0, current_row, width, current_row + opts["speed"]))
         output_image.paste(new_line, (0, current_row))
         current_row += opts["speed"]
+    print("")
 
     # and export the final frame
     output_image.save(output_dir + 'output_image.png')
