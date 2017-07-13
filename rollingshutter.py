@@ -9,7 +9,7 @@ print(path_real)
 
 
 options = {"path": "images", "speed": 1, "frame_file": "png", "width": 1920, "height": 1080}
-
+a = argv
 
 for x, i in enumerate(argv):
     if i == "-p":
@@ -18,30 +18,42 @@ for x, i in enumerate(argv):
         except IndexError:
             print("Error: -p option requires string folder path.")
             exit(1)
-    if i == "-s":
+    elif i == "-s":
         try:
             options["speed"] = int(argv[x+1])
         except (IndexError, ValueError):
             print("Error: -s option requires integer speed.")
             exit(2)
-    if i == "-f":
+    elif i == "-f":
         try:
             options["frame_file"] = argv[x+1]
         except IndexError:
             print("Error: -f option requires string frame extension")
             exit(3)
-    if i == "-w":
+    elif i == "-w":
         try:
             options["width"] = int(argv[x+1])
         except (IndexError, ValueError):
             print("Error: -w option requires integer width.")
             exit(4)
-    if i == "-h":
+    elif i == "-h":
         try:
             options["height"] = int(argv[x+1])
         except (IndexError, ValueError):
             print("Error: -h option requires integer height.")
             exit(5)
+if options == {"path": "images", "speed": 1, "frame_file": "png", "width": 1920, "height": 1080}:
+    try:
+        options["path"] = argv[1]
+        options["speed"] = int(argv[2])
+        options["frame_file"] = argv[3]
+        options["width"] = int(argv[4])
+        options["height"] = int(argv[5])
+    except IndexError:
+        pass
+    except ValueError:
+        print("Argument #2, #4 and #5 must be an integer.")
+        exit(6)
 
 computed = {"frame_dir": path_real + str(options["path"]) + "/",
             "output_dir": path_real}
