@@ -22,9 +22,11 @@ def button_pressed():
     current_row = 0
 
     files = glob.glob(computed["frame_dir"] + "*." + options["extension"])
+
     for y, filename in enumerate(files):
         percentage = str(int(((y+1)/len(files))*100)) + "%"
         progress_bar.config(text=percentage)
+        print("Progress: "+percentage, end="\r")
 
         frame = Image.open(filename)
         new_line = frame.crop((0, current_row, options["width"], current_row + options["speed"]))
