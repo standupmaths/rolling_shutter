@@ -1,5 +1,4 @@
-from tkinter import *
-from tkinter.ttk import *
+from tkinter import Tk, Grid, Frame, Label, Entry, Spinbox, Button, N, S, E, W
 
 
 # region Define simulator
