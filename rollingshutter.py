@@ -1,4 +1,6 @@
 from tkinter import Tk, Grid, Frame, Label, Entry, Spinbox, Button, N, S, E, W
+from PIL import Image
+from glob import glob
 
 
 # region Define simulator
@@ -15,9 +17,6 @@ def button_pressed():
     print(options)
     print(computed)
 
-    from PIL import Image
-    from glob import glob
-    
     output_image = Image.new('RGB', (options["width"], options["height"]))
     current_row = 0
 
