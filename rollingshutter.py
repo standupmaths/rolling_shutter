@@ -16,12 +16,12 @@ def button_pressed():
     print(computed)
 
     from PIL import Image
-    import glob
-
+    from glob import glob
+    
     output_image = Image.new('RGB', (options["width"], options["height"]))
     current_row = 0
 
-    files = glob.glob(computed["frame_dir"] + "*." + options["extension"])
+    files = glob(computed["frame_dir"] + "*." + options["extension"])
 
     for y, filename in enumerate(files):
         percentage = str(int(((y+1)/len(files))*100)) + "%"
