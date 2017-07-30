@@ -4,11 +4,11 @@ from glob import glob
 from argparse import ArgumentParser
 
 parser = ArgumentParser(description="Simulate rolling shutter")
-parser.add_argument("path", help="path of source images", nargs="?")
-parser.add_argument("speed", help="speed of rolling shutter", type=int, nargs="?")
-parser.add_argument("extension", help="extension of images", nargs="?")
-parser.add_argument("width", help="width of images", type=int, nargs="?")
-parser.add_argument("height", help="height of images", type=int, nargs="?")
+parser.add_argument("-path", help="path of source images", nargs="?")
+parser.add_argument("-speed", help="speed of rolling shutter", type=int, nargs="?")
+parser.add_argument("-extension", help="extension of images", nargs="?")
+parser.add_argument("-width", help="width of images", type=int, nargs="?")
+parser.add_argument("-height", help="height of images", type=int, nargs="?")
 
 opts = vars(parser.parse_args())
 
