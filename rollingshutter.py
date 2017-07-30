@@ -1,15 +1,26 @@
 from tkinter import Tk, Grid, Frame, Label, Entry, Spinbox, Button, N, S, E, W
 from PIL import Image
 from glob import glob
+from argparse import ArgumentParser
+
+parser = ArgumentParser(description="Simulate rolling shutter")
+parser.add_argument("path", help="path of source images", nargs="?")
+parser.add_argument("speed", help="speed of rolling shutter", type=int, nargs="?")
+parser.add_argument("extension", help="extension of images", nargs="?")
+parser.add_argument("width", help="width of images", type=int, nargs="?")
+parser.add_argument("height", help="height of images", type=int, nargs="?")
+
+opts = vars(parser.parse_args())
 
 
 # region Define simulator
-def button_pressed():
-    options = {"path": path_input.get(),
-               "speed": int(speed_input.get()),
-               "extension": extension_input.get(),
-               "width": int(width_input.get()),
-               "height": int(height_input.get())}
+def button_pressed(options=None):
+    if options is None:
+        options = {"path": path_input.get(),
+                   "speed": int(speed_input.get()),
+                   "extension": extension_input.get(),
+                   "width": int(width_input.get()),
+                   "height": int(height_input.get())}
 
     computed = {"frame_dir": path_real + str(options["path"]) + "/",
                 "output_dir": path_real}
@@ -23,9 +34,12 @@ def button_pressed():
     files = glob(computed["frame_dir"] + "*." + options["extension"])
 
     for y, filename in enumerate(files):
-        percentage = str(int(((y+1)/len(files))*100)) + "%"
-        progress_bar.config(text=percentage)
-        print("Progress: "+percentage, end="\r")
+        percentage = str(int(((y + 1) / len(files)) * 100)) + "%"
+        try:
+            progress_bar.config(text=percentage)
+        except NameError:
+            pass
+        print("Progress: " + percentage, end="\r")
 
         frame = Image.open(filename)
         new_line = frame.crop((0, current_row, options["width"], current_row + options["speed"]))
@@ -33,6 +47,8 @@ def button_pressed():
         current_row += options["speed"]
     print("")
     output_image.save(computed["output_dir"] + 'output_image.png')
+
+
 # endregion
 
 # region Get path of running file
@@ -41,6 +57,14 @@ path_real = ""
 for layer in path:
     path_real += layer + "/"
 # endregion
+
+
+if opts["path"] is not None and opts["speed"] and opts["extension"] is not None and opts["width"] is not None and \
+                opts["height"] is not None:
+    button_pressed(options=opts)
+    exit(9)
+
+
 
 # region Create components
 root = Tk()
@@ -95,7 +119,7 @@ height_label.grid(row=4, column=0)
 height_input.grid(row=4, column=1)
 
 progress_bar.grid(row=5, column=0)
-perform_simulation.grid(row=6, column=0, sticky=E+W)
+perform_simulation.grid(row=6, column=0, sticky=E + W)
 # endregion
 
 root.mainloop()
