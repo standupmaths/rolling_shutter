@@ -1,8 +1,15 @@
 from __future__ import print_function
-from PIL import Image
 from glob import glob
 from argparse import ArgumentParser
 
+
+try:
+    from PIL import Image
+except ImportError:
+    print("This script requires Pillow.")
+    Image = None
+    exit(1)
+    
 parser = ArgumentParser(description="Simulate rolling shutter")
 parser.add_argument("path", help="path of source images", nargs="?")
 parser.add_argument("speed", help="speed of rolling shutter", type=int, nargs="?")
