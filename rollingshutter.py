@@ -1,4 +1,3 @@
-from tkinter import Tk, Grid, Frame, Label, Entry, Spinbox, Button, N, S, E, W
 from PIL import Image
 from glob import glob
 from argparse import ArgumentParser
@@ -63,41 +62,41 @@ if opts["path"] is not None and opts["speed"] and opts["extension"] is not None 
                 opts["height"] is not None:
     button_pressed(options=opts)
     exit(9)
-
-
+else:
+    import tkinter
 
 # region Create components
-root = Tk()
+root = tkinter.Tk()
 root.resizable(False, False)
 
 root.title("Rolling Shutter Simulator")
-Grid.rowconfigure(root, 0, weight=1)
+tkinter.Grid.rowconfigure(root, 0, weight=1)
 
-Grid.columnconfigure(root, 0, weight=1)
-container = Frame(root)
+tkinter.Grid.columnconfigure(root, 0, weight=1)
+container = tkinter.Frame(root)
 
-container.grid(row=0, column=0, sticky=N + S + E + W)
-path_label = Label(container, text="Input")
-speed_label = Label(container, text="Speed")
-extension_label = Label(container, text="Ext.")
-width_label = Label(container, text="Width")
+container.grid(row=0, column=0, sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
+path_label = tkinter.Label(container, text="Input")
+speed_label = tkinter.Label(container, text="Speed")
+extension_label = tkinter.Label(container, text="Ext.")
+width_label = tkinter.Label(container, text="Width")
 
-height_label = Label(container, text="Height")
-path_input = Entry(container)
-speed_input = Spinbox(container, from_=1, to=1000000000000000000)
-extension_input = Entry(container)
-width_input = Spinbox(container, from_=1, to=1000000000000000000)
+height_label = tkinter.Label(container, text="Height")
+path_input = tkinter.Entry(container)
+speed_input = tkinter.Spinbox(container, from_=1, to=1000000000000000000)
+extension_input = tkinter.Entry(container)
+width_input = tkinter.Spinbox(container, from_=1, to=1000000000000000000)
 
-height_input = Spinbox(container, from_=1, to=1000000000000000000)
+height_input = tkinter.Spinbox(container, from_=1, to=1000000000000000000)
 path_input.insert(0, "images")
 extension_input.insert(0, "png")
 width_input.insert(1, 920)
 
 height_input.insert(1, "080")
-progress_bar = Label(root)
+progress_bar = tkinter.Label(root)
 
 progress_bar.config(text="0%")
-perform_simulation = Button(root, text="Perform Simulation", command=button_pressed)
+perform_simulation = tkinter.Button(root, text="Perform Simulation", command=button_pressed)
 # endregion
 
 # region Place components
@@ -119,7 +118,8 @@ height_label.grid(row=4, column=0)
 height_input.grid(row=4, column=1)
 
 progress_bar.grid(row=5, column=0)
-perform_simulation.grid(row=6, column=0, sticky=E + W)
+perform_simulation.grid(row=6, column=0, sticky=tkinter.E + tkinter.W)
 # endregion
+
 
 root.mainloop()
