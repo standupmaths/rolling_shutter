@@ -118,7 +118,7 @@ height_label.grid(row=4, column=0)
 height_input.grid(row=4, column=1)
 
 progress_bar.grid(row=5, column=0)
-perform_simulation.grid(row=6, column=0, sticky=tkinter.E + tkinter.W)
+perform_simulation.grid(row=6, column=0)
 # endregion
 
 
