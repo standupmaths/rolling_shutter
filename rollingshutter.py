@@ -1,3 +1,4 @@
+from __future__ import print_function
 from PIL import Image
 from glob import glob
 from argparse import ArgumentParser
