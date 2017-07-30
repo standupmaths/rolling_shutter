@@ -61,7 +61,7 @@ for layer in path:
 if opts["path"] is not None and opts["speed"] and opts["extension"] is not None and opts["width"] is not None and \
                 opts["height"] is not None:
     button_pressed(options=opts)
-    exit(9)
+    exit(0)
 else:
     import tkinter
 
