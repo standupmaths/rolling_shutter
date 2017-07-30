@@ -1,31 +1,133 @@
-def rs(folder,speed=1):
-    
+from __future__ import print_function
+from glob import glob
+from argparse import ArgumentParser
+
+
+try:
     from PIL import Image
-    import glob
+except ImportError:
+    print("This script requires Pillow.")
+    Image = None
+    exit(1)
     
-    # ENTER YOUR DIRECTORIES AND FILE TYPE HERE
-    frame_dir = "/Users/mattparker/Documents/rollingshuttervideos/" + str(folder) + "/"
-    frame_file = "png"
-    output_dir = "/Users/mattparker/Documents/rollingshuttervideos/"
-    
-    width = 1920
-    height = 1080
-    
-    # Making our blank output frame
-    output_image = Image.new('RGB', (width, height)) 
-    
-    
-    # let us go through the frames one at a time
-    
+parser = ArgumentParser(description="Simulate rolling shutter")
+parser.add_argument("path", help="path of source images", nargs="?")
+parser.add_argument("speed", help="speed of rolling shutter", type=int, nargs="?")
+parser.add_argument("extension", help="extension of images", nargs="?")
+parser.add_argument("width", help="width of images", type=int, nargs="?")
+parser.add_argument("height", help="height of images", type=int, nargs="?")
+
+opts = vars(parser.parse_args())
+
+
+# region Define simulator
+def button_pressed(options=None):
+    if options is None:
+        options = {"path": path_input.get(),
+                   "speed": int(speed_input.get()),
+                   "extension": extension_input.get(),
+                   "width": int(width_input.get()),
+                   "height": int(height_input.get())}
+
+    computed = {"frame_dir": path_real + str(options["path"]) + "/",
+                "output_dir": path_real}
+
+    print(options)
+    print(computed)
+
+    output_image = Image.new('RGB', (options["width"], options["height"]))
     current_row = 0
-    
-    for filename in glob.glob(frame_dir + "*." + frame_file):
+
+    files = glob(computed["frame_dir"] + "*." + options["extension"])
+
+    for y, filename in enumerate(files):
+        percentage = str(int(((y + 1) / len(files)) * 100)) + "%"
+        try:
+            progress_bar.config(text=percentage)
+        except NameError:
+            pass
+        print("Progress: " + percentage, end="\r")
+
         frame = Image.open(filename)
-        new_line = frame.crop((0, current_row, width, current_row+speed))
-        output_image.paste(new_line, (0,current_row))
-        current_row += speed
-    
-    # and export the final frame
-    output_image.save(output_dir + 'output_image.png')
-    
-    return 'DONE'
+        new_line = frame.crop((0, current_row, options["width"], current_row + options["speed"]))
+        output_image.paste(new_line, (0, current_row))
+        current_row += options["speed"]
+    print("")
+    output_image.save(computed["output_dir"] + 'output_image.png')
+
+
+# endregion
+
+# region Get path of running file
+path = __file__.split("/")[:-1]
+path_real = ""
+for layer in path:
+    path_real += layer + "/"
+# endregion
+
+
+if opts["path"] is not None and opts["speed"] and opts["extension"] is not None and opts["width"] is not None and \
+                opts["height"] is not None:
+    button_pressed(options=opts)
+    exit(0)
+else:
+    import tkinter
+
+# region Create components
+root = tkinter.Tk()
+root.resizable(False, False)
+
+root.title("Rolling Shutter Simulator")
+tkinter.Grid.rowconfigure(root, 0, weight=1)
+
+tkinter.Grid.columnconfigure(root, 0, weight=1)
+container = tkinter.Frame(root)
+
+container.grid(row=0, column=0, sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
+path_label = tkinter.Label(container, text="Input")
+speed_label = tkinter.Label(container, text="Speed")
+extension_label = tkinter.Label(container, text="Ext.")
+width_label = tkinter.Label(container, text="Width")
+
+height_label = tkinter.Label(container, text="Height")
+path_input = tkinter.Entry(container)
+speed_input = tkinter.Spinbox(container, from_=1, to=1000000000000000000)
+extension_input = tkinter.Entry(container)
+width_input = tkinter.Spinbox(container, from_=1, to=1000000000000000000)
+
+height_input = tkinter.Spinbox(container, from_=1, to=1000000000000000000)
+path_input.insert(0, "images")
+extension_input.insert(0, "png")
+width_input.insert(1, 920)
+
+height_input.insert(1, "080")
+progress_bar = tkinter.Label(root)
+
+progress_bar.config(text="0%")
+perform_simulation = tkinter.Button(root, text="Perform Simulation", command=button_pressed)
+# endregion
+
+# region Place components
+path_label.grid(row=0, column=0)
+
+path_input.grid(row=0, column=1)
+speed_label.grid(row=1, column=0)
+
+speed_input.grid(row=1, column=1)
+
+extension_label.grid(row=2, column=0)
+
+extension_input.grid(row=2, column=1)
+width_label.grid(row=3, column=0)
+
+width_input.grid(row=3, column=1)
+height_label.grid(row=4, column=0)
+
+height_input.grid(row=4, column=1)
+
+progress_bar.grid(row=5, column=0)
+perform_simulation.grid(row=6, column=0)
+# endregion
+
+
+root.mainloop()
