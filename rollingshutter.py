@@ -19,7 +19,7 @@ def rs(folder,speed=1):
     
     current_row = 0
     
-    for filename in glob.glob(frame_dir + "*." + frame_file):
+    for filename in sorted(glob.glob(frame_dir + "*." + frame_file)):
         frame = Image.open(filename)
         new_line = frame.crop((0, current_row, width, current_row+speed))
         output_image.paste(new_line, (0,current_row))
